@@ -5,25 +5,31 @@ import {
     LoginContainer,
     LogoContainer,
     SignInButton,
-    Title,
-    SubTitle,
     LoginButton,
     Form,
+    Separator,
 } from "./styles";
 import { api } from "../../services/api";
 import Ripples from "react-ripples";
 import { FaEnvelope } from "react-icons/fa";
+import {useHistory} from 'react-router-dom';
+
 
 function Login({}) {
     const [email, setEmail] = useState("");
     const [passwd, setPasswd] = useState("");
     const [loading, setLoading] = useState(false);
+    const [registrar, setRegistrar] = useState(false);
+
+    let history = useHistory();
 
     useEffect(() => {
         setEmail("claudioyvens10@gmail.com");
         setPasswd("asd123");
     }, []);
     const handleLogin = async (event) => {
+
+
         event.preventDefault();
         setLoading(true);
         await api
@@ -32,7 +38,10 @@ function Login({}) {
                 password: passwd,
             })
             .then((res) => {
-                console.log(res);
+                setLoading(false);
+                history.push('/Main');
+            }).catch((err)=>{
+                console.log('algo errado');
                 setLoading(false);
             });
     };
@@ -40,11 +49,17 @@ function Login({}) {
     return (
         <Container>
             <LogoContainer>
-                <h1>logo</h1>
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/React-icon.svg/1280px-React-icon.svg.png" alt="Logo" />
             </LogoContainer>
+            <Separator animate={registrar}>
+                <div>
+                </div>
+                <div>
+                </div>
+            </Separator>
             <LoginContainer>
-                <Title>Bem vindo</Title>
-                <SubTitle>Por favor, identifique-se</SubTitle>
+                <h1>Bem vindo</h1>
+                <h3>Por favor, identifique-se</h3>
                 <Form
                     onSubmit={handleLogin}
                     style={{ display: "flex", flexDirection: "column" }}
@@ -75,7 +90,7 @@ function Login({}) {
                         </Ripples>
                     </div>
 
-                    <SignInButton>Registrar</SignInButton>
+                    <SignInButton onClick={()=>setRegistrar(true)}>Registrar</SignInButton>
                 </Form>
             </LoginContainer>
         </Container>
